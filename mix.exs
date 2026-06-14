@@ -27,7 +27,11 @@ defmodule Tzdata.Mixfile do
 
   defp deps do
     [
-      {:hackney, "~> 1.17"},
+      # Both HTTP clients are optional; the host app provides one (Req is
+      # preferred, see Tzdata.DataLoader.http_client/0). req ~> 0.6 for its
+      # recent security fixes.
+      {:req, "~> 0.6", optional: true},
+      {:hackney, "~> 1.17", optional: true},
       {:ex_doc, "~> 0.21", only: :dev, runtime: false}
     ]
   end

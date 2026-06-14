@@ -171,6 +171,16 @@ defmodule Tzdata.DataLoader do
   defp data_dir, do: Tzdata.Util.data_dir()
 
   defp http_client() do
-    Application.get_env(:tzdata, :http_client, Tzdata.HTTPClient.Hackney)
+    Application.get_env(:tzdata, :http_client) || default_http_client()
+  end
+
+  # Prefer Req when available, falling back to Hackney. Both deps are optional;
+  # the host app supplies one (or configures :tzdata, :http_client explicitly).
+  defp default_http_client() do
+    if Code.ensure_loaded?(Req) do
+      Tzdata.HTTPClient.Req
+    else
+      Tzdata.HTTPClient.Hackney
+    end
   end
 end
